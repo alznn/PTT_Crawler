@@ -24,30 +24,33 @@ def InfoAndContent(links):
         if str(main_content) == "None":
             print("Hi")
         else:
-            metas = main_content.select('div.article-metaline')
-            author = metas[0].select('span.article-meta-value')[0].getText()
-            title = metas[1].select('span.article-meta-value')[0].getText()
-            date = metas[2].select('span.article-meta-value')[0].getText()
-            tmp.append(author)
-            tmp.append(title)
-            tmp.append(date)
-            filtered = [v for v in main_content.stripped_strings if v[0] not in [u'※', u'◆'] and v[:2] and not soup.select('div.class.push')]
-            content = ' '.join(filtered)
+            try:
+                metas = main_content.select('div.article-metaline')
+                author = metas[0].select('span.article-meta-value')[0].getText()
+                title = metas[1].select('span.article-meta-value')[0].getText()
+                date = metas[2].select('span.article-meta-value')[0].getText()
+                tmp.append(author)
+                tmp.append(title)
+                tmp.append(date)
+                filtered = [v for v in main_content.stripped_strings if v[0] not in [u'※', u'◆'] and v[:2] and not soup.select('div.class.push')]
+                content = ' '.join(filtered)
 
-            content = re.sub(r'(\-\-)+.*', '', content)
-            content = re.sub(r'[作者|發信人].+([[1|2]([0-9]{3}))','', content)
-            #content = re.sub(r'.+轉信站.+\n', '', content)
-            content = re.sub(r'\n','', content)
-            tmp.append(content)
-            print(author)
-            print(title)
-            print(date)
-            #print("content:\n",content)
-            #outFile.append(tmp)
-            output(tmp)
+                content = re.sub(r'(\-\-)+.*', '', content)
+                content = re.sub(r'[作者|發信人].+([[1|2]([0-9]{3}))','', content)
+                #content = re.sub(r'.+轉信站.+\n', '', content)
+                content = re.sub(r'\n','', content)
+                tmp.append(content)
+                print(author)
+                print(title)
+                print(date)
+                #print("content:\n",content)
+                #outFile.append(tmp)
+                output(tmp)
+            except IndexError:
+                print("IndexError")
 
 
-# main
+        # main
 links = []
 
 url = 'https://www.ptt.cc/bbs/movie/index.html'
@@ -56,7 +59,7 @@ response = requests.get(url)
 soup = BeautifulSoup(response.text, 'lxml')
 articles = soup.find_all('div', 'r-ent')
 #movie 版 index : 1-6583,""
-for i in range(1,3):
+for i in range(1,6583):
     if i == 0:
         url = 'https://www.ptt.cc/bbs/movie/index.html'  #newest
     else:
